@@ -1,8 +1,7 @@
 package com.platform.order.internal.web;
 
 import com.platform.common.OrderStatus;
-import com.platform.order.internal.domain.Order;
-import com.platform.order.internal.domain.OrderItem;
+import com.platform.order.internal.entity.Order;
 
 import java.math.BigDecimal;
 import java.time.Instant;

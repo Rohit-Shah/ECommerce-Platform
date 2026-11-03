@@ -1,28 +1,36 @@
 package com.platform.order.internal.web;
 
-import com.platform.common.ErrorResponse;
-import com.platform.exceptions.OrderNotFoundException;
-import org.apache.coyote.Response;
+import com.platform.common.exceptions.OrderExceptions.OrderNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
 
 @RestControllerAdvice
+@Slf4j
 public class OrderExceptionHandler {
 
     @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleOrderNotFound(OrderNotFoundException e){
-        ErrorResponse response = new ErrorResponse(Instant.now(), HttpStatus.NOT_FOUND.value(),"Order not found",e.getMessage());
-        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+    public ProblemDetail handleOrderNotFound(OrderNotFoundException e){
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,e.getMessage());
+        problemDetail.setTitle("Order not found");
+        problemDetail.setProperty("timestamp",Instant.now());
+        return problemDetail;
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception e){
-        ErrorResponse response = new ErrorResponse(Instant.now(),HttpStatus.INTERNAL_SERVER_ERROR.value(),"Some error occurred",e.getMessage());
-        return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+    public ProblemDetail handleGenericException(Exception e){
+        log.error("Unhandled exception caught in web layer: ", e);
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "An unexpected error occurred. Please contact support."
+        );
+        problem.setTitle("Internal Server Error");
+        problem.setProperty("timestamp", Instant.now());
+        return problem;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.platform.order.internal.domain;
+package com.platform.order.internal.entity;
 
 import com.platform.common.OrderStatus;
 import jakarta.persistence.*;

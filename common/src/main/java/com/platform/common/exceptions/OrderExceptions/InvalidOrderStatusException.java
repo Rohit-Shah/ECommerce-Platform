@@ -1,4 +1,4 @@
-package com.platform.exceptions;
+package com.platform.common.exceptions.OrderExceptions;
 
 public class InvalidOrderStatusException extends RuntimeException{
     public InvalidOrderStatusException(String message){

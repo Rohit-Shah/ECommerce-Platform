@@ -1,11 +1,9 @@
-package com.platform.order.internal.domain;
+package com.platform.order.internal.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.parser.Part;
 
 import java.math.BigDecimal;
 import java.util.UUID;

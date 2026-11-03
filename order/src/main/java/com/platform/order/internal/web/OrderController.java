@@ -1,6 +1,6 @@
 package com.platform.order.internal.web;
 
-import com.platform.order.internal.service.OrderService;
+import com.platform.order.internal.service.serviceImpl.OrderServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrderServiceImpl orderService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

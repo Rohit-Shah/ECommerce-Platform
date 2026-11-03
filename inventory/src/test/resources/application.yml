@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: ets-engine
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ets_engine
+    username: root
+    password: admin123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+  data:
+    redis:
+      host: ***REMOVED***
+      port: ***REMOVED***
+      client-name: ETSPlatform
+      username: default
+      password: ***REMOVED***
+      timeout: 60s
+      connect-timeout: 5s

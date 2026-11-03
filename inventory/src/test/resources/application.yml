@@ -16,10 +16,10 @@ spring:
 
   data:
     redis:
-      host: ***REMOVED***
-      port: ***REMOVED***
+      host: ${redis_host}
+      port: ${redis_port}
       client-name: ETSPlatform
       username: default
-      password: ***REMOVED***
+      password: ${redis_password}
       timeout: 60s
       connect-timeout: 5s

@@ -54,4 +54,31 @@ public class InventoryServiceImpl implements InventoryService {
             }
         }
     }
+
+    @Override
+    public void releaseStock(String sku,int quantity){
+        String lockKey = LOCK_PREFIX + sku;
+        RLock lock = redissonClient.getLock(lockKey);
+        boolean isLocked = false;
+        try{
+            isLocked = lock.tryLock(WAIT_TIME_SECONDS,LEASE_TIME_SECONDS,TimeUnit.SECONDS);
+            if(!isLocked){
+                log.warn("Unable to get lock for SKU {} within {}s",sku,WAIT_TIME_SECONDS);
+                throw new LockAcquisitionException("System is busy handling requests for SKU"+ sku +"Please try again");
+            }
+            log.debug("Acquired lock for sku {} ",sku);
+            transactionTemplate.executeWithoutResult(status -> {
+                Inventory inventory = inventoryRepository.findById(sku).orElseThrow(() -> new InventoryNotFoundException("Couldn't find the requested item " + sku));
+                inventory.release(quantity);
+                inventoryRepository.save(inventory);
+            });
+        }catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if(isLocked && lock.isHeldByCurrentThread()){
+                lock.unlock();
+                log.debug("Released lock for SKU : {} ",sku);
+            }
+        }
+    }
 }
